@@ -22,15 +22,28 @@ This plugin requires Grunt v0.4.1+.
 
 ```js
 search: {
-	default: {
+
+	// inline style tags
+	inlineStyles: {
+		files: {
+			src: ["*.html", "**/*.hbs"]
+		},
+		options: {
+			searchString: /style\s?=\s?["']*/g,
+			logFile: "tmp/results.json"
+		}
+	},
+
+	// look for any developers adding obscenities in the codebase
+	obscenities: {
 		files: {
 			src: ["*"]
 		},
 		options: {
-			searchString: /WARR[^\s]*/g,
-			logFile: "tmp/results.json",
-			logFormat: "json"
-			//failOnMatch: true
+			searchString: /(poop|fart|Barbara\sStreisand)/g,
+			logFile: "tmp/results.txt",
+			logFormat: "text",
+			failOnMatch: true
 		}
 	}
 }
