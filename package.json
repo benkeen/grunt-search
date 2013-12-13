@@ -1,0 +1,46 @@
+{
+  "name": "grunt-search",
+  "description": "Grunt plugin that searches a list of files for particular search strings and logs all findings in various formats.",
+  "version": "0.1.0",
+  "homepage": "https://github.com/benkeen/grunt-search",
+  "author": {
+    "name": "Ben Keen",
+    "email": "ben.keen@gmail.com",
+    "url": "http://benjaminkeen.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/benkeen/grunt-search.git"
+  },
+  "bugs": {
+    "url": "https://github.com/benkeen/grunt-search/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/benkeen/grunt-search/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "scripts": {
+    "test": "grunt test"
+  },
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt": "~0.4.2",
+    "line-by-line": "~0.1.1"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.1"
+  },
+  "keywords": [
+    "gruntplugin",
+    "search",
+    "logging"
+  ]
+}
