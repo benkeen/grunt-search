@@ -10,7 +10,6 @@
 
 module.exports = function(grunt) {
 
-	// project configuration
 	grunt.initConfig({
 		jshint: {
 			all: [
@@ -30,14 +29,15 @@ module.exports = function(grunt) {
 
 		// configuration to be run (and then tested)
 		search: {
-			ben: {
+			default: {
 				files: {
 					src: ["*"]
 				},
 				options: {
-					searchString: /WARRANTY/gi,
-					logFile: "tmp/results.js",
-					failOnMatch: true
+					searchString: /WARR[^\s]*/g,
+					logFile: "tmp/results.json",
+					logFormat: "json"
+					//failOnMatch: true
 				}
 			}
 		},
@@ -48,14 +48,11 @@ module.exports = function(grunt) {
 		}
 	});
 
-	// actually load this plugin's task(s)
 	grunt.loadTasks('tasks');
 
-	// these plugins provide necessary tasks
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
-	//grunt.loadNpmTasks('line-reader');
 
 	// whenever the "test" task is run, first clean the "tmp" dir, then run this plugin's task(s), then test the result
 	grunt.registerTask('test', ['clean', 'search', 'nodeunit']);

@@ -30,7 +30,9 @@ module.exports = function(grunt) {
 		}
 
 		// if the searchString isn't a regular expression, convert it to one
-
+		if (!(options.searchString instanceof RegExp)) {
+			options.searchString = new RegExp(options.searchString, "g");
+		}
 
 		// now iterate over all specified file groups
 		this.files.forEach(function(f) {
@@ -42,7 +44,8 @@ module.exports = function(grunt) {
 					return;
 				}
 
-				// this was in the example, but it doesn't seem to even GET here if the file specified doesn't exist
+				// *** this was in the gruntplugin example, but it doesn't seem to even GET here if the file specified
+				// doesn't exist... ***
 				if (!grunt.file.exists(filepath)) {
 					grunt.log.warn('Source file "' + filepath + '" not found.');
 				} else {
@@ -65,21 +68,19 @@ module.exports = function(grunt) {
 						if (!matches.hasOwnProperty(file)) {
 							matches[file] = [];
 						}
-						matches[file].push(j);
+						matches[file].push({ line: j, match: lineMatches[0] });
 						numMatches++;
 					}
 				}
 			}
 
-			// write the log file
-			if (numMatches > 0) {
-				_generateLogFile(options, matches);
-				if (options.failOnMatch) {
-					grunt.fail.fatal("Matches of " + options.searchString.toString() + " found");
-				}
+			// write the log file - even if there are no results. It'll just contain a "numResults: 0" which is useful
+			// in of itself
+			_generateLogFile(options, matches, numMatches);
+			if (numMatches > 0 && options.failOnMatch) {
+				grunt.fail.fatal("Matches of " + options.searchString.toString() + " found");
 			}
 		});
-
 	});
 
 	var _validateOptions = function(options) {
@@ -96,10 +97,51 @@ module.exports = function(grunt) {
 			}
 		}
 		return optionErrors.length === 0;
-	}
-
-	var _generateLogFile = function(options, results) {
-		//grunt.file.write(f.dest, src);
 	};
 
+	var _generateLogFile = function(options, results, numResults) {
+		var content = '';
+		if (options.logFormat === "json") {
+			content = "{\n\t\"numResults\": " + numResults + ",\n"
+					+ "\t\"creationDate\": \"" + _getISODateString() + "\",\n"
+					+ "\t\"results\": {\n";
+
+			var group = [];
+			for (var file in results) {
+				var groupStr = "\t\t\"" + file + "\": [\n";
+
+				var matchGroup = [];
+				for (var i=0; i<results[file].length; i++) {
+					matchGroup.push("\t\t\t{\n"
+						+ "\t\t\t\t\"lineNum\": " + results[file][i].line
+						+ ",\n"
+						+ "\t\t\t\t\"match\": "
+						+ "\"" + results[file][i].match + "\""
+						+ "\n\t\t\t}");
+				}
+
+				groupStr += matchGroup.join(",\n") + "\n";
+				groupStr += "\t\t]"
+				group.push(groupStr);
+			}
+			content += group.join(",\n");
+			content += "\n\t}\n}";
+		}
+
+		// remove the old file, in case it exists
+		grunt.file.write(options.logFile, content);
+	};
+
+	var _getISODateString = function() {
+		var d = new Date();
+		function pad(n) {
+			return n<10 ? '0'+n : n;
+		}
+		return d.getUTCFullYear()+'-'
+			+ pad(d.getUTCMonth()+1)+'-'
+			+ pad(d.getUTCDate()) +' '
+			+ pad(d.getUTCHours())+':'
+			+ pad(d.getUTCMinutes())+':'
+			+ pad(d.getUTCSeconds())
+	};
 };
