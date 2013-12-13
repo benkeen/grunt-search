@@ -101,35 +101,62 @@ module.exports = function(grunt) {
 
 	var _generateLogFile = function(options, results, numResults) {
 		var content = '';
+
 		if (options.logFormat === "json") {
-			content = "{\n\t\"numResults\": " + numResults + ",\n"
-					+ "\t\"creationDate\": \"" + _getISODateString() + "\",\n"
-					+ "\t\"results\": {\n";
-
-			var group = [];
-			for (var file in results) {
-				var groupStr = "\t\t\"" + file + "\": [\n";
-
-				var matchGroup = [];
-				for (var i=0; i<results[file].length; i++) {
-					matchGroup.push("\t\t\t{\n"
-						+ "\t\t\t\t\"lineNum\": " + results[file][i].line
-						+ ",\n"
-						+ "\t\t\t\t\"match\": "
-						+ "\"" + results[file][i].match + "\""
-						+ "\n\t\t\t}");
-				}
-
-				groupStr += matchGroup.join(",\n") + "\n";
-				groupStr += "\t\t]"
-				group.push(groupStr);
-			}
-			content += group.join(",\n");
-			content += "\n\t}\n}";
+			content = _getJSONLogFormat(options, results, numResults);
+		} else if (options.logFormat === "xml") {
+			content = _getXMLLogFormat(options, results, numResults);
+		} else if (options.logFormat === "text") {
+			content = _getTextLogFormat(options, results, numResults);
 		}
 
 		// remove the old file, in case it exists
 		grunt.file.write(options.logFile, content);
+	};
+
+
+	/**
+	 * This generates a JSON formatted file of the match results. Boy I miss templating. :-)
+	 * @param options
+	 * @param results
+	 * @param numResults
+	 * @returns {string}
+	 * @private
+	 */
+	var _getJSONLogFormat = function(options, results, numResults) {
+		var content = "{\n\t\"numResults\": " + numResults + ",\n"
+			+ "\t\"creationDate\": \"" + _getISODateString() + "\",\n"
+			+ "\t\"results\": {\n";
+
+		var group = [];
+		for (var file in results) {
+			var groupStr = "\t\t\"" + file + "\": [\n";
+
+			var matchGroup = [];
+			for (var i=0; i<results[file].length; i++) {
+				matchGroup.push("\t\t\t{\n"
+					+ "\t\t\t\t\"lineNum\": " + results[file][i].line
+					+ ",\n"
+					+ "\t\t\t\t\"match\": "
+					+ "\"" + results[file][i].match + "\""
+					+ "\n\t\t\t}");
+			}
+			groupStr += matchGroup.join(",\n") + "\n";
+			groupStr += "\t\t]"
+			group.push(groupStr);
+		}
+		content += group.join(",\n");
+		content += "\n\t}\n}";
+
+		return content;
+	};
+
+	var _getXMLLogFormat = function(options, results, numResults) {
+
+	};
+
+	var _getTextLogFormat = function(options, results, numResults) {
+
 	};
 
 	var _getISODateString = function() {
