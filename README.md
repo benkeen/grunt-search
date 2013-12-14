@@ -63,13 +63,13 @@ grunt.initConfig({
                 logFormat: "xml",
                 failOnMatch: true,
                 onMatch: function(match) {
-                    // called when a match is made. The parameter is an object of the following structure:
-                    // { file: "", line: X, match: "" }
+                    // called when a match is made. The parameter is an object of the following
+                    // structure: { file: "", line: X, match: "" }
                 },
                 onFinish: function(matches) {
-                    // called when all files have been parsed for the target. The matches parameter is an
-                    // object of the format `{ numMatches: N, matches: {} }`. The matches property is an object
-                    // of filename => array of matches
+                    // called when all files have been parsed for the target. The matches parameter
+                    // is an object of the format `{ numMatches: N, matches: {} }`. The matches
+                    // property is an object of filename => array of matches
                 },
             }
         }
