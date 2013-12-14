@@ -20,7 +20,9 @@ module.exports = function(grunt) {
 			searchString: null,
 			logFile: null,
 			logFormat: 'json', // json/xml/text
-			failOnMatch: false
+			failOnMatch: false,
+			onComplete: null,
+			onMatch: null
 		});
 
 		// validate the options
