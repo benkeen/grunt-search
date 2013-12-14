@@ -1,0 +1,15 @@
+Num results:3
+Creation date: 2013-12-14 00:20:58
+Results:
+	File: Gruntfile.js
+	Line number: 37
+	Match: WARR[^\s]*/g,
+
+	File: LICENSE
+	Line number: 15
+	Match: WARRANTY
+
+	File: LICENSE
+	Line number: 16
+	Match: WARRANTIES
+

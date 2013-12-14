@@ -20,11 +20,15 @@ This plugin requires Grunt v0.4.1+.
 In your project folder, run the following command [N.B. this won't work yet - once I complete + submit the code to
 npm, it will. I'll remove this comment then].
 
-`npm install grunt-search --save-dev`
+```
+npm install grunt-search --save-dev
+```
 
 Once the plugin's been installed, you need to add this line of JS to your gruntfile:
 
-`grunt.loadNpmTasks('grunt-search');`
+```
+grunt.loadNpmTasks('grunt-search');
+```
 
 That will reference this module and allow you to use it.
 

@@ -23,7 +23,6 @@ module.exports = function(grunt) {
 			failOnMatch: false
 		});
 
-
 		// validate the options
 		if (!_validateOptions(options)) {
 			return;
@@ -110,7 +109,6 @@ module.exports = function(grunt) {
 			content = _getTextLogFormat(options, results, numResults);
 		}
 
-		// remove the old file, in case it exists
 		grunt.file.write(options.logFile, content);
 	};
 
@@ -135,7 +133,7 @@ module.exports = function(grunt) {
 			var matchGroup = [];
 			for (var i=0; i<results[file].length; i++) {
 				matchGroup.push("\t\t\t{\n"
-					+ "\t\t\t\t\"lineNum\": " + results[file][i].line
+					+ "\t\t\t\t\"line\": " + results[file][i].line
 					+ ",\n"
 					+ "\t\t\t\t\"match\": "
 					+ "\"" + results[file][i].match + "\""
@@ -152,11 +150,43 @@ module.exports = function(grunt) {
 	};
 
 	var _getXMLLogFormat = function(options, results, numResults) {
+		var content = "<?xml version=\"1.0\"?>\n"
+			+ "<search>\n"
+			+ "\t<numResults>" + numResults + "</numResults>\n"
+			+ "\t<creationDate>" + _getISODateString() + "</creationDate>\n"
+			+ "\t<results>\n";
 
+		var group = [];
+		var matchGroup = "";
+		for (var file in results) {
+			for (var i=0; i<results[file].length; i++) {
+				matchGroup += "\t\t<result>\n"
+					+ "\t\t\t<file>" + file + "</file>\n"
+					+ "\t\t\t<line>" + results[file][i].line + "</line>\n"
+					+ "\t\t\t<match>" + results[file][i].match + "</match>\n"
+					+ "\t\t</result>";
+			}
+		}
+		content += matchGroup + "\n"
+				+ "\t</results>\n"
+				+ "</search>";
+
+		return content;
 	};
 
 	var _getTextLogFormat = function(options, results, numResults) {
+		var content = "Num results: " + numResults + "\n"
+			+ "Creation date: " + _getISODateString() + "\n"
+			+ "Results:\n";
 
+		for (var file in results) {
+			for (var i=0; i<results[file].length; i++) {
+				content += "\tFile: " + file + "\n"
+						+ "\tLine: " + results[file][i].line + "\n"
+						+ "\tMatch: " + results[file][i].match + "\n\n"
+			}
+		}
+		return content;
 	};
 
 	var _getISODateString = function() {

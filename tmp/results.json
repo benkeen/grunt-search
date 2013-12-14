@@ -1,0 +1,22 @@
+{
+	"numResults": 3,
+	"creationDate": "2013-12-14 00:25:18",
+	"results": {
+		"Gruntfile.js": [
+			{
+				"line": 37,
+				"match": "WARR[^\s]*/g,"
+			}
+		],
+		"LICENSE": [
+			{
+				"line": 15,
+				"match": "WARRANTY"
+			},
+			{
+				"line": 16,
+				"match": "WARRANTIES"
+			}
+		]
+	}
+}
