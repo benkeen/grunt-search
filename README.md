@@ -63,13 +63,14 @@ grunt.initConfig({
                 logFormat: "xml",
                 failOnMatch: true,
                 onMatch: function(match) {
-                    // called when a match is made. The parameter is an object of the following
-                    // structure: { file: "", line: X, match: "" }
+                    // called when a match is made. The parameter is an object of the
+                    // following structure: { file: "", line: X, match: "" }
                 },
                 onFinish: function(matches) {
-                    // called when all files have been parsed for the target. The matches parameter
-                    // is an object of the format `{ numMatches: N, matches: {} }`. The matches
-                    // property is an object of filename => array of matches
+                    // called when all files have been parsed for the target. The
+                    // matches parameter is an object of the format:
+                    // `{ numMatches: N, matches: {} }`. The matches /property is
+                    // an object of filename => array of matches
                 },
             }
         }
@@ -77,12 +78,20 @@ grunt.initConfig({
 });
 ```
 
+### File matching
+
+The `files` property should be an object with a single `src` property containing an array of files, or file patterns.
+This plugin uses Grunt's file globbing patterns, documented here:
+http://gruntjs.com/configuring-tasks
+
+
 ### Options
 
 The `options` property can contain any of the following:
 
-- *searchString*: (required) a string or regexp - the string to search for.
-- *logFile*: (required) the location of the file to be created. This is relative to the grunt root.
+- *searchString*: (required) a string or regexp. This is the string you're looking for.
+- *logFile*: (required) the location of the file to be created. Like all things with Grunt, this is relative to the
+Grunt root.
 - *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml` or `text`.
 - *failOnMatch*: (optional, defaults to `false`). This option lets you choose to fail the build process if any matches
 are found.
@@ -100,7 +109,8 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
-- 0.1.0 - Dec 14th. Initial release.
+- 0.1.1 - Dec 14th. Bug fix for JSON report files.
+- 0.1.0 - Dec 13th. Initial release.
 
 ### Things To Improve
 

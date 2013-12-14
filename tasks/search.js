@@ -235,13 +235,13 @@ module.exports = function(grunt) {
 	// helpers ----------------
 
 	var _cleanStr = function(str) {
-		return str.replace(/"/, "\\\"");
+		return str.replace(/"/g, "\\\"");
 	}
 
 	var _getISODateString = function() {
 		var d = new Date();
 		function pad(n) {
-			return n<10 ? '0'+n : n;
+			return n < 10 ? '0' + n : n;
 		}
 		return d.getUTCFullYear()+'-'
 			+ pad(d.getUTCMonth()+1)+'-'
