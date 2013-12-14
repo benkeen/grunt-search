@@ -1,6 +1,6 @@
 {
   "name": "grunt-search",
-  "description": "Grunt plugin that searches a list of files for particular search strings and logs all findings in various formats.",
+  "description": "Grunt plugin that searches a list of files and logs all findings in various formats.",
   "version": "0.1.1",
   "homepage": "https://github.com/benkeen/grunt-search",
   "author": {
