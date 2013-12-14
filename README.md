@@ -23,7 +23,7 @@ In your project folder, run the following command:
 npm install grunt-search --save-dev
 ```
 
-Once the plugin's been installed, you need to add this line of JS to your gruntfile:
+Once the plugin has been installed, you need to add this line of JS to your gruntfile:
 
 ```js
 grunt.loadNpmTasks('grunt-search');
@@ -34,8 +34,8 @@ That will reference this module and allow you to use it.
 
 ### Usage example
 
-It's pretty straightforward to use. Here are a couple of targets, that illustrate how to look for inline styles and
-check your codebase for rude words, slipped in by unruly developers.
+If you're familiar with Grunt, it's pretty straightforward to use. Here are a couple of targets that illustrate how
+to look for inline styles and check your codebase for rude words, slipped in by unruly developers.
 
 ```js
 grunt.initConfig({
