@@ -21,6 +21,7 @@ module.exports = function(grunt) {
 			logFile: null,
 			logFormat: 'json', // json/xml/text
 			failOnMatch: false,
+			outputExaminedFiles: false,
 			onComplete: null,
 			onMatch: null
 		});
@@ -77,7 +78,7 @@ module.exports = function(grunt) {
 
 			// write the log file - even if there are no results. It'll just contain a "numResults: 0" which is useful
 			// in of itself
-			_generateLogFile(options, matches, numMatches);
+			_generateLogFile(options, filePaths, matches, numMatches);
 			if (numMatches > 0 && options.failOnMatch) {
 				grunt.fail.fatal("Matches of " + options.searchString.toString() + " found");
 			}
@@ -100,15 +101,15 @@ module.exports = function(grunt) {
 		return optionErrors.length === 0;
 	};
 
-	var _generateLogFile = function(options, results, numResults) {
+	var _generateLogFile = function(options, filePaths, results, numResults) {
 		var content = '';
 
 		if (options.logFormat === "json") {
-			content = _getJSONLogFormat(options, results, numResults);
+			content = _getJSONLogFormat(options, filePaths, results, numResults);
 		} else if (options.logFormat === "xml") {
-			content = _getXMLLogFormat(options, results, numResults);
+			content = _getXMLLogFormat(options, filePaths, results, numResults);
 		} else if (options.logFormat === "text") {
-			content = _getTextLogFormat(options, results, numResults);
+			content = _getTextLogFormat(options, filePaths, results, numResults);
 		}
 
 		grunt.file.write(options.logFile, content);
@@ -123,7 +124,7 @@ module.exports = function(grunt) {
 	 * @returns {string}
 	 * @private
 	 */
-	var _getJSONLogFormat = function(options, results, numResults) {
+	var _getJSONLogFormat = function(options, filePaths, results, numResults) {
 		var content = "{\n\t\"numResults\": " + numResults + ",\n"
 			+ "\t\"creationDate\": \"" + _getISODateString() + "\",\n"
 			+ "\t\"results\": {\n";
@@ -135,10 +136,8 @@ module.exports = function(grunt) {
 			var matchGroup = [];
 			for (var i=0; i<results[file].length; i++) {
 				matchGroup.push("\t\t\t{\n"
-					+ "\t\t\t\t\"line\": " + results[file][i].line
-					+ ",\n"
-					+ "\t\t\t\t\"match\": "
-					+ "\"" + results[file][i].match + "\""
+					+ "\t\t\t\t\"line\": " + results[file][i].line + ",\n"
+					+ "\t\t\t\t\"match\": " + "\"" + _cleanStr(results[file][i].match) + "\""
 					+ "\n\t\t\t}");
 			}
 			groupStr += matchGroup.join(",\n") + "\n";
@@ -146,23 +145,34 @@ module.exports = function(grunt) {
 			group.push(groupStr);
 		}
 		content += group.join(",\n");
-		content += "\n\t}\n}";
+		content += "\n\t}"
+
+		if (options.outputExaminedFiles) {
+			content += ",\n\t\"examinedFiles\": [\n";
+			var files = [];
+			for (var i=0; i<filePaths.length; i++) {
+				files.push("\t\t\"" + _cleanStr(filePaths[i]) + "\"");
+			}
+			content += files.join(",\n");
+			content += "\n\t]";
+		}
+
+		content += "\n}";
 
 		return content;
 	};
 
-	var _getXMLLogFormat = function(options, results, numResults) {
+	var _getXMLLogFormat = function(options, filePaths, results, numResults) {
 		var content = "<?xml version=\"1.0\"?>\n"
 			+ "<search>\n"
 			+ "\t<numResults>" + numResults + "</numResults>\n"
 			+ "\t<creationDate>" + _getISODateString() + "</creationDate>\n"
-			+ "\t<results>\n";
+			+ "\t<results>";
 
-		var group = [];
 		var matchGroup = "";
 		for (var file in results) {
 			for (var i=0; i<results[file].length; i++) {
-				matchGroup += "\t\t<result>\n"
+				matchGroup += "\n\t\t<result>\n"
 					+ "\t\t\t<file>" + file + "</file>\n"
 					+ "\t\t\t<line>" + results[file][i].line + "</line>\n"
 					+ "\t\t\t<match>" + results[file][i].match + "</match>\n"
@@ -170,13 +180,23 @@ module.exports = function(grunt) {
 			}
 		}
 		content += matchGroup + "\n"
-				+ "\t</results>\n"
-				+ "</search>";
+				+ "\t</results>\n";
+
+
+		if (options.outputExaminedFiles) {
+			content += "\t<examinedFiles>\n";
+			for (var i=0; i<filePaths.length; i++) {
+				content += "\t\t<file>" + filePaths[i] + "</file>\n";
+			}
+			content += "\t</examinedFiles>\n";
+		}
+
+		content +=  "</search>";
 
 		return content;
 	};
 
-	var _getTextLogFormat = function(options, results, numResults) {
+	var _getTextLogFormat = function(options, filePaths, results, numResults) {
 		var content = "Num results: " + numResults + "\n"
 			+ "Creation date: " + _getISODateString() + "\n"
 			+ "Results:\n";
@@ -188,8 +208,23 @@ module.exports = function(grunt) {
 						+ "\tMatch: " + results[file][i].match + "\n\n"
 			}
 		}
+
+		if (options.outputExaminedFiles) {
+			content += "Examined files:\n";
+			for (var i=0; i<filePaths.length; i++) {
+				content += "\t" + filePaths[i] + "\n";
+			}
+		}
+
 		return content;
 	};
+
+
+	// helpers ----------------
+
+	var _cleanStr = function(str) {
+		return str.replace(/"/, "\\\"");
+	}
 
 	var _getISODateString = function() {
 		var d = new Date();

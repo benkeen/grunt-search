@@ -31,46 +31,13 @@ module.exports = function(grunt) {
 		search: {
 			default: {
 				files: {
-					src: ["*"]
+					src: ["test/**/*", "*"]
 				},
 				options: {
-					searchString: /WARR[^\s]*/g,
-					logFile: "tmp/results.json",
-					logFormat: "json"
-					//failOnMatch: true
-				}
-			},
-			inlineStyles: {
-				files: {
-					src: [
-						"components/**/*",
-						"core/**/*",
-						"shared-partials/**.*",
-						"shared-templates/**.*",
-						"source-templates/*",
-					]
-				},
-				options: {
-					searchString: /(style\s*=\s*["'].*)/g,
-					logFile: "build/inlineStyles.json",
-					logFormat: "json"
-				}
-			},
-			inlineEventHandlers: {
-				files: {
-					src: [
-						"components/**/*",
-						"core/**/*",
-						"shared-partials/**.*",
-						"shared-scripts/**.*",
-						"shared-templates/**.*",
-						"source-templates/*",
-					]
-				},
-				options: {
-					searchString: /((onclick|onblur|onfocus)\s*=\s*?["'].*)/g,
-					logFile: "build/inlineEventHandlers.json",
-					logFormat: "json"
+					searchString: /WARR[^\s]*/gi,
+					logFile: "tmp/results.txt",
+					logFormat: "text",
+					outputExaminedFiles: true
 				}
 			}
 		},

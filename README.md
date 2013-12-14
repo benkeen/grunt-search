@@ -69,7 +69,7 @@ grunt.initConfig({
                 },
                 onFinish: function(matches) {
                     // called when all files have been parsed for the target. The matches parameter is an
-                    // object of filename to array of match information
+                    // object of filename => array of match information
                 },
             }
         }
@@ -86,10 +86,14 @@ The `options` property can contain any of the following:
 - *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml` or `text`.
 - *failOnMatch*: (optional, defaults to `false`). This option lets you choose to fail the build process if any matches
 are found.
-- *onComplete*: (optional) a function.
-- *onMatch*: (optional) a function.
+- *outputExaminedFiles*: (optional) a boolean - default to `false`). Sometimes it's not totally clear what files are being matched by the file
+globbing. When this option is set to `true`, the generated output file contains a list of the files that had been examined.
+- *onComplete*: (optional) a function. This is called when all file searching it complete. It's passed a single parameter.
+An object of filename => array of match information
+- *onMatch*: (optional) a function. This is called after each match is made. It's passed a single parameter - an object
+with the following structure: `{ file: "", line: X, match: "" }`
 
-If either of the required parameters are omitted, the build will fail.
+Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
