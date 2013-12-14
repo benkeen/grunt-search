@@ -17,8 +17,7 @@ So basically, we run this function along with `jshint` in our dev environments t
 
 This plugin requires Grunt v0.4.1+.
 
-In your project folder, run the following command [N.B. this won't work yet - once I complete + submit the code to
-npm, it will. I'll remove this comment then].
+In your project folder, run the following command:
 
 ```js
 npm install grunt-search --save-dev
