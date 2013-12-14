@@ -34,10 +34,13 @@ module.exports = function(grunt) {
 					src: ["test/**/*", "*"]
 				},
 				options: {
-					searchString: /WARR[^\s]*/gi,
-					logFile: "tmp/results.txt",
-					logFormat: "text",
-					outputExaminedFiles: true
+					searchString: "style",
+					logFile: "tmp/results.json",
+					logFormat: "json",
+					outputExaminedFiles: true,
+					onComplete: function(matches) {
+						console.log("matched! ", matches);
+					}
 				}
 			}
 		},

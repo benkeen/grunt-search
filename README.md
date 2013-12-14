@@ -10,7 +10,7 @@ only. We wanted to run various tests on our codebase to look for certain things:
 old, unwanted HTML tags. None of these weren't significant enough to warrant failing the build, but they do give a
 clue as the health of the codebase.
 
-So basically, we run this function along with `jshint` in our dev environments to prevent the accumulation of crap.
+So basically, we run this function along with `jshint` in our dev environments to warn us about the accumulation of crap.
 
 
 ### Installation
@@ -69,7 +69,8 @@ grunt.initConfig({
                 },
                 onFinish: function(matches) {
                     // called when all files have been parsed for the target. The matches parameter is an
-                    // object of filename => array of match information
+                    // object of the format `{ numMatches: N, matches: {} }`. The matches property is an object
+                    // of filename => array of matches
                 },
             }
         }
@@ -86,10 +87,13 @@ The `options` property can contain any of the following:
 - *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml` or `text`.
 - *failOnMatch*: (optional, defaults to `false`). This option lets you choose to fail the build process if any matches
 are found.
-- *outputExaminedFiles*: (optional) a boolean - default to `false`). Sometimes it's not totally clear what files are being matched by the file
-globbing. When this option is set to `true`, the generated output file contains a list of the files that had been examined.
-- *onComplete*: (optional) a function. This is called when all file searching it complete. It's passed a single parameter.
-An object of filename => array of match information
+- *outputExaminedFiles*: (optional) a boolean - default to `false`). Sometimes it's not totally clear what files are
+being matched by the file globbing. When this option is set to `true`, the generated output file contains a list of the
+files that had been examined.
+- *onComplete*: (optional) a function. This is called when all file searching is complete. It's passed a single parameter.
+An object of the following format: `{ numMatches: N, matches: {} }`. The matches property is an object of
+filename => array of matches. Note: this function doesn't get called with a fatal error (namely: a required parameter
+isn't included).
 - *onMatch*: (optional) a function. This is called after each match is made. It's passed a single parameter - an object
 with the following structure: `{ file: "", line: X, match: "" }`
 
@@ -99,12 +103,11 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 - 0.1.0 - Dec 14th. Initial release.
 
-### Things To fix
+### Things To Improve
 
-- "searchString" is a pretty poor property name.
-- need to escape double-quotes in JSON file
-- each file is loaded entirely into memory right now. Be better to stream it in, from a memory perspective.
-- multi-line matches won't work.
+- Each file is loaded entirely into memory right now. From a memory perspective it would be better to stream them in.
+- Multi-line matches won't work.
+- Tests currently incomplete.
 
 ### License
 

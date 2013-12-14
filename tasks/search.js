@@ -72,6 +72,14 @@ module.exports = function(grunt) {
 						}
 						matches[file].push({ line: j, match: lineMatches[0] });
 						numMatches++;
+
+						if (options.onMatch !== null) {
+							options.onMatch({
+								file: file,
+								line: j,
+								match: lineMatches[0]
+							});
+						}
 					}
 				}
 			}
@@ -81,6 +89,10 @@ module.exports = function(grunt) {
 			_generateLogFile(options, filePaths, matches, numMatches);
 			if (numMatches > 0 && options.failOnMatch) {
 				grunt.fail.fatal("Matches of " + options.searchString.toString() + " found");
+			}
+
+			if (options.onComplete !== null) {
+				options.onComplete({ numMatches: numMatches, matches: matches });
 			}
 		});
 	});
