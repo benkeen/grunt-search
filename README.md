@@ -12,7 +12,6 @@ clue as the health of the codebase.
 
 So basically, we run this function along with `jshint` in our dev environments to warn us about the accumulation of crap.
 
-
 ### Installation
 
 This plugin requires Grunt v0.4.1+.
@@ -100,8 +99,8 @@ being matched by the file globbing. When this option is set to `true`, the gener
 files that had been examined.
 - *onComplete*: (optional) a function. This is called when all file searching is complete. It's passed a single parameter.
 An object of the following format: `{ numMatches: N, matches: {} }`. The matches property is an object of
-filename => array of matches. Note: this function doesn't get called with a fatal error (namely: a required parameter
-isn't included).
+filename => array of matches. Note: this function doesn't get called in the event of a fatal error (i.e. a required
+options parameter wasn't properly included).
 - *onMatch*: (optional) a function. This is called after each match is made. It's passed a single parameter - an object
 with the following structure: `{ file: "", line: X, match: "" }`
 
@@ -115,7 +114,8 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Things To Improve
 
-- Each file is loaded entirely into memory right now. From a memory perspective it would be better to stream them in.
+- Each file being examined is loaded entirely into memory right now. From a memory perspective it would be better to
+stream them in.
 - Multi-line matches won't work.
 - Better tests!
 
