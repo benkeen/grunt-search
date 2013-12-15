@@ -109,6 +109,7 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
+- 0.1.2 - Dec 15th. Tests added, minor tweaks.
 - 0.1.1 - Dec 14th. Bug fix for JSON report files.
 - 0.1.0 - Dec 13th. Initial release.
 
@@ -116,7 +117,7 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 - Each file is loaded entirely into memory right now. From a memory perspective it would be better to stream them in.
 - Multi-line matches won't work.
-- Tests currently incomplete.
+- Better tests!
 
 ### License
 
