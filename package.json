@@ -1,12 +1,12 @@
 {
   "name": "grunt-search",
   "description": "Grunt plugin that searches a list of files and logs all findings in various formats.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/benkeen/grunt-search",
   "author": {
     "name": "Ben Keen",
     "email": "ben.keen@gmail.com",
-    "url": "http://benjaminkeen.com"
+    "url": "http://www.benjaminkeen.com"
   },
   "repository": {
     "type": "git",
@@ -29,7 +29,6 @@
     "test": "grunt test"
   },
   "devDependencies": {
-    "grunt-contrib-jshint": "~0.6.0",
     "grunt-contrib-clean": "~0.4.0",
     "grunt-contrib-nodeunit": "~0.2.0",
     "grunt": "~0.4.1"

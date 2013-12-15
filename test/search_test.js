@@ -27,21 +27,22 @@ exports.search = {
 		done();
 	},
 
-	default_options: function(test) {
-		test.expect(1);
+	// pretty sodding basic
+	simpleCompare: function(test) {
+		test.expect(3);
 
-		var actual = grunt.file.read('tmp/default_options');
-		var expected = grunt.file.read('test/expected/default_options');
-		test.equal(actual, expected, 'should describe what the default behavior is.');
-		test.done();
-	},
+		var actual   = JSON.parse(grunt.file.read('test/tmp/results.json'));
+		var expected = JSON.parse(grunt.file.read('test/expected/results.json'));
 
-	custom_options: function(test) {
-		test.expect(1);
+		test.equal(actual.numResults, expected.numResults, 'should describe what the default behavior is.');
+		test.equal(actual.results["test/test_source.html"].line,
+				   expected.results["test/test_source.html"].line,
+				   'should check that the line number of the found string.');
+		test.equal(actual.results["test/test_source.html"].match,
+			expected.results["test/test_source.html"].match,
+			'should compare the match.');
 
-		var actual = grunt.file.read('tmp/custom_options');
-		var expected = grunt.file.read('test/expected/custom_options');
-		test.equal(actual, expected, 'should describe what the custom option(s) behavior is.');
 		test.done();
 	}
+
 };

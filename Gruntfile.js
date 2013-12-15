@@ -11,16 +11,6 @@
 module.exports = function(grunt) {
 
 	grunt.initConfig({
-		jshint: {
-			all: [
-				'Gruntfile.js',
-				'tasks/*.js',
-				'<%= nodeunit.tests %>'
-			],
-			options: {
-				jshintrc: '.jshintrc'
-			}
-		},
 
 		// before generating any new files, remove any previously-created files
 		clean: {
@@ -31,16 +21,13 @@ module.exports = function(grunt) {
 		search: {
 			default: {
 				files: {
-					src: ["test/**/*", "*"]
+					src: ["test/test_source.html"]
 				},
 				options: {
 					searchString: "style",
-					logFile: "tmp/results.json",
+					logFile: "test/tmp/results.json",
 					logFormat: "json",
-					outputExaminedFiles: true,
-					onComplete: function(matches) {
-						console.log("matched! ", matches);
-					}
+					outputExaminedFiles: true
 				}
 			}
 		},
@@ -53,7 +40,6 @@ module.exports = function(grunt) {
 
 	grunt.loadTasks('tasks');
 
-	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
@@ -61,5 +47,5 @@ module.exports = function(grunt) {
 	grunt.registerTask('test', ['clean', 'search', 'nodeunit']);
 
 	// by default, lint and run all tests
-	grunt.registerTask('default', ['jshint', 'test']);
+	grunt.registerTask('default', ['search', 'test']);
 };
