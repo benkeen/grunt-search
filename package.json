@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/benkeen/grunt-search.git"
+    "url":  "git://github.com/benkeen/grunt-search.git"
   },
   "bugs": {
     "url": "https://github.com/benkeen/grunt-search/issues"
