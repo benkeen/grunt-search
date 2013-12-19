@@ -74,7 +74,8 @@ grunt.initConfig({
             }
         },
 
-        // Example 3: search a PHP codebase for short-tags and just output the findings to the console
+        // Example 3: search a PHP codebase for short-tags and just output the findings to
+        // the console (short tags can be disabled, so this helps prevent them sneaking in!)
 		short_tags: {
 			files: {
 				src: ["**/*.php"]
@@ -101,7 +102,7 @@ The `options` property can contain any of the following:
 
 - *searchString*: (required) a string or regexp. This is the string you're looking for.
 - *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml`, `text` or `console`.
-- *logFile*: (required, unless logFormat == "console") the location of the file to be created. Like all things with
+- *logFile*: (required, unless logFormat is set to `console`) the location of the file to be created. Like all things with
 Grunt, this is relative to the Grunt root.
 - *failOnMatch*: (optional, defaults to `false`). This option lets you choose to fail the build process if any matches
 are found.
