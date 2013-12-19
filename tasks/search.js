@@ -6,20 +6,17 @@
  * Licensed under the MIT license.
  */
 
-'use strict';
+"use strict";
 
 module.exports = function(grunt) {
 
-	// Please see the Grunt documentation for more information regarding task
-	// creation: http://gruntjs.com/creating-tasks
-
-	grunt.registerMultiTask('search', 'Grunt plugin that searches a list of files for particular search strings and logs all findings in various formats.', function() {
+	grunt.registerMultiTask("search", "Grunt plugin that searches a list of files for particular search strings and logs all findings in various formats.", function() {
 
 		// merge task-specific and/or target-specific options with these defaults
 		var options = this.options({
 			searchString: null,
 			logFile: null,
-			logFormat: 'json', // json/xml/text
+			logFormat: 'json', // json/xml/text/console
 			failOnMatch: false,
 			outputExaminedFiles: false,
 			onComplete: null,
@@ -94,6 +91,8 @@ module.exports = function(grunt) {
 			if (options.onComplete !== null) {
 				options.onComplete({ numMatches: numMatches, matches: matches });
 			}
+
+			grunt.log.writeln("Num matches: " + numMatches);
 		});
 	});
 
@@ -102,7 +101,7 @@ module.exports = function(grunt) {
 		if (options.searchString === null) {
 			optionErrors.push("Missing options.searchString value.");
 		}
-		if (options.logFile === null) {
+		if (options.logFormat !== "console" && options.logFile === null) {
 			optionErrors.push("Missing options.logFile value.");
 		}
 		if (optionErrors.length) {
@@ -120,11 +119,15 @@ module.exports = function(grunt) {
 			content = _getJSONLogFormat(options, filePaths, results, numResults);
 		} else if (options.logFormat === "xml") {
 			content = _getXMLLogFormat(options, filePaths, results, numResults);
-		} else if (options.logFormat === "text") {
+		} else if (options.logFormat === "text" || options.logFormat === "console") {
 			content = _getTextLogFormat(options, filePaths, results, numResults);
 		}
 
-		grunt.file.write(options.logFile, content);
+		if (options.logFormat !== "console") {
+			grunt.file.write(options.logFile, content);
+		} else {
+			grunt.log.writeln(content);
+		}
 	};
 
 

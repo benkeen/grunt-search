@@ -31,16 +31,16 @@ grunt.loadNpmTasks('grunt-search');
 That will reference this module and allow you to use it.
 
 
-### Usage example
+### Usage examples
 
-If you're familiar with Grunt, it's pretty straightforward to use. Here are a couple of targets that illustrate how
-to look for inline styles and check your codebase for rude words, slipped in by unruly developers.
+If you're familiar with Grunt, it's pretty straightforward to use. Here are three searches so you can see
+how it works.
 
 ```js
 grunt.initConfig({
     search: {
 
-        // inline style tags
+        // Example 1: search for inline style tags
         inlineStyles: {
             files: {
                 src: ["*.html", "**/*.hbs"]
@@ -51,7 +51,7 @@ grunt.initConfig({
             }
         },
 
-        // look for any developers adding obscenities in the codebase
+        // Example 2: look for any developers leaving obscenities in the codebase
         obscenities: {
             files: {
                 src: ["*"]
@@ -72,7 +72,18 @@ grunt.initConfig({
                     // an object of filename => array of matches
                 },
             }
-        }
+        },
+
+        // Example 3: search a PHP codebase for short-tags and output the findings to the console
+		short_tags: {
+			files: {
+				src: ["**/*.php"]
+			},
+			options: {
+				searchString: /(<\?[^p])|(<\?$)/,
+				logFormat: "console"
+			}
+		}
     }
 });
 ```
@@ -89,9 +100,9 @@ http://gruntjs.com/configuring-tasks
 The `options` property can contain any of the following:
 
 - *searchString*: (required) a string or regexp. This is the string you're looking for.
-- *logFile*: (required) the location of the file to be created. Like all things with Grunt, this is relative to the
-Grunt root.
-- *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml` or `text`.
+- *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml`, `text` or `console`.
+- *logFile*: (required, unless logFormat == "console") the location of the file to be created. Like all things with
+Grunt, this is relative to the Grunt root.
 - *failOnMatch*: (optional, defaults to `false`). This option lets you choose to fail the build process if any matches
 are found.
 - *outputExaminedFiles*: (optional) a boolean - default to `false`). Sometimes it's not totally clear what files are
@@ -108,6 +119,8 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
+- 0.1.3 - Dec 18th. `console` logFile option value added for simply outputting results to console. Now the number of
+matches is always output to the console regardless of logFile type, as well as being logged in the generated file.
 - 0.1.2 - Dec 15th. Tests added, minor tweaks.
 - 0.1.1 - Dec 14th. Bug fix for JSON report files.
 - 0.1.0 - Dec 13th. Initial release.
