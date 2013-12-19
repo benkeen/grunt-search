@@ -131,6 +131,7 @@ matches is always output to the console regardless of logFile type, as well as b
 - Each file being examined is loaded entirely into memory right now. From a memory perspective it would be better to
 stream them in.
 - Multi-line matches won't work.
+- Having some sort of omit list for the file search would be pretty nice. I find that often it finds dud matches in specific files, but I still want the general blobbing map to be searched...
 - Better tests!
 
 ### License
