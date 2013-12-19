@@ -33,8 +33,8 @@ That will reference this module and allow you to use it.
 
 ### Usage examples
 
-If you're familiar with Grunt, it's pretty straightforward to use. Here are three searches so you can see
-how it works.
+If you're familiar with Grunt, it's pretty straightforward to use. Here's a few example searches so you can get the idea
+of how it operates.
 
 ```js
 grunt.initConfig({
@@ -74,7 +74,7 @@ grunt.initConfig({
             }
         },
 
-        // Example 3: search a PHP codebase for short-tags and output the findings to the console
+        // Example 3: search a PHP codebase for short-tags and just output the findings to the console
 		short_tags: {
 			files: {
 				src: ["**/*.php"]
