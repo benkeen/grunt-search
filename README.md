@@ -1,7 +1,7 @@
 ## grunt-search
 
 This is a Grunt plugin that searches a list of files for particular search strings and logs the results in JSON, XML
-or text format. It also provides an option to fail the build process, should you need it.
+or text format - or just output to the console. It also provides an option to fail the build process, should you need it.
 
 ### Use-case
 
