@@ -101,7 +101,7 @@ http://gruntjs.com/configuring-tasks
 The `options` property can contain any of the following:
 
 - *searchString*: (required) a string or regexp. This is the string you're looking for.
-- *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml`, `text` or `console`.
+- *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml`, `junit`, `text` or `console`.
 - *logFile*: (required, unless logFormat is set to `console`) the location of the file to be created. Like all things with
 Grunt, this is relative to the Grunt root.
 - *failOnMatch*: (optional, defaults to `false`). This option lets you choose to fail the build process if any matches
@@ -120,6 +120,7 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
+- 0.1.4 - Mar 5th. `junit` logFile option value added for generating JUnit XML reports. 
 - 0.1.3 - Dec 18th. `console` logFile option value added for simply outputting results to console. Now the number of
 matches is always output to the console regardless of logFile type, as well as being logged in the generated file.
 - 0.1.2 - Dec 15th. Tests added, minor tweaks.
