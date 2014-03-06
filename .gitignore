@@ -1,4 +1,4 @@
-tmp/*
+test/tmp
 
 lib-cov
 *.seed
@@ -17,14 +17,3 @@ npm-debug.log
 node_modules
 
 .idea*
-
-
-tmp/results.json
-
-tmp/results.json
-
-tmp/results.xml
-
-tmp/results.txt
-
-tmp/results.txt

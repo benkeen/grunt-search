@@ -14,7 +14,7 @@ module.exports = function(grunt) {
 
 		// before generating any new files, remove any previously-created files
 		clean: {
-			tests: ['tmp']
+			tests: ['test/tmp']
 		},
 
 		// configuration to be run (and then tested)
@@ -28,6 +28,17 @@ module.exports = function(grunt) {
 					logFile: "test/tmp/results.json",
 					logFormat: "json",
 					outputExaminedFiles: true
+				}
+			},
+
+			junit: {
+				files: {
+					src: ["test/fixtures/file*", "!test/fixtures/file3*"]
+				},
+				options: {
+					searchString: "@nocommit",
+					logFile: "test/tmp/junit-nocommit.xml",
+					logFormat: "junit"
 				}
 			}
 		},

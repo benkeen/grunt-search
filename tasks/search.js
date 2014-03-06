@@ -115,10 +115,14 @@ module.exports = function(grunt) {
 	var _generateLogFile = function(options, filePaths, results, numResults) {
 		var content = '';
 
+		console.log('options.logFormat', options.logFormat);
+
 		if (options.logFormat === "json") {
 			content = _getJSONLogFormat(options, filePaths, results, numResults);
 		} else if (options.logFormat === "xml") {
 			content = _getXMLLogFormat(options, filePaths, results, numResults);
+		} else if (options.logFormat === "junit") {
+			content = _getJUnitLogFormat(options, filePaths, results, numResults);
 		} else if (options.logFormat === "text" || options.logFormat === "console") {
 			content = _getTextLogFormat(options, filePaths, results, numResults);
 		}
@@ -234,6 +238,56 @@ module.exports = function(grunt) {
 		return content;
 	};
 
+	var _getJUnitLogFormat = (function() {
+
+		function testCaseXML(name, failures) {
+			return [
+
+				"\t<testcase name=\"" + name + "\">",
+				"\t\t<failure message=\"Substring matched\">",
+				"\t\t<![CDATA[",
+
+				    failures.map(function(failure, num) {
+				   		return (num + 1) + ". line " + failure.line + ": " + failure.match;
+				    }).join("\n"),
+
+				"\t\t]]>",
+				"\t\t</failure>",
+			    "\t</testcase>"
+
+			].join("\n");
+		}
+
+		return function(options, filePaths, results, numResults) {
+
+			var parts = Object.keys(results).reduce(function(parts, file) {
+				parts.numTests += 1;
+				parts.numFailures += results[file].length;
+
+				parts.testCases.push(testCaseXML(file, results[file]));
+
+				return parts;
+			}, {
+				numTests    : 0,
+				numFailures : 0,
+				testCases   : []
+			});
+
+			var content = [
+
+				"<?xml version=\"1.0\"?>",
+				"<testsuite name=\"jshint\" tests=\"" + parts.numTests + "\" failures=\"" + parts.numFailures + "\" errors=\"0\">",
+			  		parts.testCases.join("\n"),
+				"</testsuite>"
+
+			].join("\n");
+
+			grunt.verbose.writeln(options.searchString.toString().yellow + ' > ' + options.logFile);
+			grunt.verbose.writeln(content);
+
+			return content;
+		};
+	}());
 
 	// helpers ----------------
 

@@ -43,6 +43,13 @@ exports.search = {
 			'should compare the match.');
 
 		test.done();
-	}
+	},
 
+    junitReport: function(test) {
+        test.equal(grunt.file.read('test/tmp/junit-nocommit.xml'),
+            grunt.file.read('test/expected/junit-nocommit.xml'),
+            'should match desired output');
+
+        test.done();
+    }
 };
