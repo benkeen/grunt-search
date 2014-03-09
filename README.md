@@ -120,7 +120,7 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
-- 0.1.4 - Mar 5th. `junit` logFile option value added for generating JUnit XML reports. 
+- 0.1.4 - Mar 5th. `junit` logFile option value added for generating JUnit XML reports. Courtesy of Sergii Iavorsky.
 - 0.1.3 - Dec 18th. `console` logFile option value added for simply outputting results to console. Now the number of
 matches is always output to the console regardless of logFile type, as well as being logged in the generated file.
 - 0.1.2 - Dec 15th. Tests added, minor tweaks.
