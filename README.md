@@ -110,12 +110,15 @@ are found.
 - *outputExaminedFiles*: (optional) a boolean - default to `false`). Sometimes it's not totally clear what files are
 being matched by the file globbing. When this option is set to `true`, the generated output file contains a list of the
 files that had been examined.
+- *scopeMatchToFile*: (optional) a boolean - default to `false`. Determines if match should be scoped to line or file. For example, when `true` passed as parameter it all matches would be hanled for files and parameters for *onMatch* and *logCondition* would be passed as `{ file: "", line: [X, X], match: ["", ""] }` per one for each file where one or multiple matches was occured
 - *onComplete*: (optional) a function. This is called when all file searching is complete. It's passed a single parameter.
 An object of the following format: `{ numMatches: N, matches: {} }`. The matches property is an object of
 filename => array of matches. Note: this function doesn't get called in the event of a fatal error (i.e. a required
 options parameter wasn't properly included).
 - *onMatch*: (optional) a function. This is called after each match is made. It's passed a single parameter - an object
 with the following structure: `{ file: "", line: X, match: "" }`
+- *logCondition*: (optional) a function. This is called to check if this match should be included in output. It's passed a single parameter - an object
+with the following structure: `{ file: "", line: X, match: "" }`. If this function returns `true` match would be included, if function return `false` - not.
 
 Note: if either of the required parameters are omitted, the build will fail.
 
