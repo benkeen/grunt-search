@@ -128,12 +128,13 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
-- 0.1.4 - Mar 5th. `junit` logFile option value added for generating JUnit XML reports. Courtesy of Sergii Iavorsky.
-- 0.1.3 - Dec 18th. `console` logFile option value added for simply outputting results to console. Now the number of
+- 0.1.5 - May 13th, 2014 - logCondition and scopeMatchToFile, courtesy of [Sergei Z.](https://github.com/sagens42)
+- 0.1.4 - Mar 5th, 2014. `junit` logFile option value added for generating JUnit XML reports. Courtesy of Sergii Iavorsky.
+- 0.1.3 - Dec 18th, 2013. `console` logFile option value added for simply outputting results to console. Now the number of
 matches is always output to the console regardless of logFile type, as well as being logged in the generated file.
-- 0.1.2 - Dec 15th. Tests added, minor tweaks.
-- 0.1.1 - Dec 14th. Bug fix for JSON report files.
-- 0.1.0 - Dec 13th. Initial release.
+- 0.1.2 - Dec 15th, 2013. Tests added, minor tweaks.
+- 0.1.1 - Dec 14th, 2013. Bug fix for JSON report files.
+- 0.1.0 - Dec 13th, 2013. Initial release.
 
 ### Things To Improve
 
