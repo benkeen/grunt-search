@@ -18,9 +18,11 @@ module.exports = function(grunt) {
 			logFile: null,
 			logFormat: 'json', // json/xml/text/console
 			failOnMatch: false,
+			scopeMatchToFile: false,
 			outputExaminedFiles: false,
 			onComplete: null,
-			onMatch: null
+			onMatch: null,
+			logCondition: null
 		});
 
 		// validate the options
@@ -61,22 +63,52 @@ module.exports = function(grunt) {
 				var src = grunt.file.read(file);
 
 				var lines = src.split("\n");
+				var matchLines = [];
+				var matchStrings = [];
+				var foundMatch = false;
 				for (var j=1; j<=lines.length; j++) {
 					var lineMatches = lines[j-1].match(options.searchString);
 					if (lineMatches) {
-						if (!matches.hasOwnProperty(file)) {
-							matches[file] = [];
-						}
-						matches[file].push({ line: j, match: lineMatches[0] });
-						numMatches++;
+						foundMatch = true;
+						matchLines.push(j);
+						matchStrings.push(lineMatches[0]);
 
-						if (options.onMatch !== null) {
-							options.onMatch({
-								file: file,
-								line: j,
-								match: lineMatches[0]
-							});
+						var lineMatch = {
+							file: file,
+							line: j,
+							match: lineMatches[0]
+						};
+
+						if (!options.scopeMatchToFile && (options.logCondition === null || options.logCondition(lineMatch) === true)) {
+							if (!matches.hasOwnProperty(file)) {
+								matches[file] = [];
+							}
+							matches[file].push({ line: j, match: lineMatches[0] });
+							numMatches++;
+							
+							if (options.onMatch !== null) {
+								options.onMatch(lineMatch);
+							}
 						}
+					}
+				}
+
+				var fileMatch = {
+					file: file,
+					line: matchLines,
+					match: matchStrings
+				};
+
+				if (foundMatch && options.scopeMatchToFile && (options.logCondition === null || options.logCondition(fileMatch) == true)) {
+					
+					if (!matches.hasOwnProperty(file)) {
+						matches[file] = [];
+					}
+					matches[file].push({ line: matchLines, match: matchStrings });
+					numMatches++;
+
+					if (options.onMatch !== null) {
+						options.onMatch(fileMatch);
 					}
 				}
 			}
