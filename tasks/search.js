@@ -19,10 +19,12 @@ module.exports = function(grunt) {
 			logFormat: 'json', // json/xml/text/console
 			failOnMatch: false,
 			scopeMatchToFile: false,
+			JUnitTestsuiteName: 'jshint',
+			JUnitFailureMessage: 'Substring matched',
 			outputExaminedFiles: false,
 			onComplete: null,
 			onMatch: null,
-			logCondition: null
+			isJUnitFailure: null
 		});
 
 		// validate the options
@@ -79,7 +81,9 @@ module.exports = function(grunt) {
 							match: lineMatches[0]
 						};
 
-						if (!options.scopeMatchToFile && (options.logCondition === null || options.logCondition(lineMatch) === true)) {
+
+						if (!options.scopeMatchToFile) {
+
 							if (!matches.hasOwnProperty(file)) {
 								matches[file] = [];
 							}
@@ -99,7 +103,7 @@ module.exports = function(grunt) {
 					match: matchStrings
 				};
 
-				if (foundMatch && options.scopeMatchToFile && (options.logCondition === null || options.logCondition(fileMatch) == true)) {
+				if (foundMatch && options.scopeMatchToFile) {
 					
 					if (!matches.hasOwnProperty(file)) {
 						matches[file] = [];
@@ -176,9 +180,9 @@ module.exports = function(grunt) {
 	 * @private
 	 */
 	var _getJSONLogFormat = function(options, filePaths, results, numResults) {
-		var content = "{\n\t\"numResults\": " + numResults + ",\n"
-			+ "\t\"creationDate\": \"" + _getISODateString() + "\",\n"
-			+ "\t\"results\": {\n";
+		var content = "{\n\t\"numResults\": " + numResults + ",\n" + 
+			"\t\"creationDate\": \"" + _getISODateString() + "\",\n" + 
+			"\t\"results\": {\n";
 
 		var group = [];
 		for (var file in results) {
@@ -186,10 +190,10 @@ module.exports = function(grunt) {
 
 			var matchGroup = [];
 			for (var i=0; i<results[file].length; i++) {
-				matchGroup.push("\t\t\t{\n"
-					+ "\t\t\t\t\"line\": " + results[file][i].line + ",\n"
-					+ "\t\t\t\t\"match\": " + "\"" + _cleanStr(results[file][i].match) + "\""
-					+ "\n\t\t\t}");
+				matchGroup.push("\t\t\t{\n" + 
+					"\t\t\t\t\"line\": " + results[file][i].line + ",\n" + 
+					"\t\t\t\t\"match\": " + "\"" + _cleanStr(results[file][i].match) + "\"" + 
+					"\n\t\t\t}");
 			}
 			groupStr += matchGroup.join(",\n") + "\n";
 			groupStr += "\t\t]"
@@ -214,24 +218,23 @@ module.exports = function(grunt) {
 	};
 
 	var _getXMLLogFormat = function(options, filePaths, results, numResults) {
-		var content = "<?xml version=\"1.0\"?>\n"
-			+ "<search>\n"
-			+ "\t<numResults>" + numResults + "</numResults>\n"
-			+ "\t<creationDate>" + _getISODateString() + "</creationDate>\n"
-			+ "\t<results>";
+		var content = "<?xml version=\"1.0\"?>\n" + 
+			"<search>\n" + 
+			"\t<numResults>" + numResults + "</numResults>\n" + 
+			"\t<creationDate>" + _getISODateString() + "</creationDate>\n" + 
+			"\t<results>";
 
 		var matchGroup = "";
 		for (var file in results) {
 			for (var i=0; i<results[file].length; i++) {
-				matchGroup += "\n\t\t<result>\n"
-					+ "\t\t\t<file>" + file + "</file>\n"
-					+ "\t\t\t<line>" + results[file][i].line + "</line>\n"
-					+ "\t\t\t<match>" + results[file][i].match + "</match>\n"
-					+ "\t\t</result>";
+				matchGroup += "\n\t\t<result>\n" + 
+					"\t\t\t<file>" + file + "</file>\n" + 
+					"\t\t\t<line>" + results[file][i].line + "</line>\n" + 
+					"\t\t\t<match>" + results[file][i].match + "</match>\n" + 
+					"\t\t</result>";
 			}
 		}
-		content += matchGroup + "\n"
-				+ "\t</results>\n";
+		content += matchGroup + "\n" + "\t</results>\n";
 
 
 		if (options.outputExaminedFiles) {
@@ -248,15 +251,15 @@ module.exports = function(grunt) {
 	};
 
 	var _getTextLogFormat = function(options, filePaths, results, numResults) {
-		var content = "Num results: " + numResults + "\n"
-			+ "Creation date: " + _getISODateString() + "\n"
-			+ "Results:\n";
+		var content = "Num results: " + numResults + "\n" + 
+			"Creation date: " + _getISODateString() + "\n" + 
+			"Results:\n";
 
 		for (var file in results) {
 			for (var i=0; i<results[file].length; i++) {
-				content += "\tFile: " + file + "\n"
-						+ "\tLine: " + results[file][i].line + "\n"
-						+ "\tMatch: " + results[file][i].match + "\n\n"
+				content += "\tFile: " + file + "\n" + 
+				"\tLine: " + results[file][i].line + "\n" + 
+				"\tMatch: " + results[file][i].match + "\n\n"
 			}
 		}
 
@@ -272,16 +275,16 @@ module.exports = function(grunt) {
 
 	var _getJUnitLogFormat = (function() {
 
-		function testCaseXML(name, failures) {
-			return [
+		function failTestCaseXML(name, matches, message) {
 
+			return [
 				"\t<testcase name=\"" + name + "\">",
-				"\t\t<failure message=\"Substring matched\">",
+				"\t\t<failure message=\"" + message + "\">",
 				"\t\t<![CDATA[",
 
-				    failures.map(function(failure, num) {
-				   		return (num + 1) + ". line " + failure.line + ": " + failure.match;
-				    }).join("\n"),
+					matches.map(function(failure, num, message) {
+						return (num + 1) + ". line " + failure.line + ": " + failure.match;
+					}).join("\n"),
 
 				"\t\t]]>",
 				"\t\t</failure>",
@@ -290,13 +293,30 @@ module.exports = function(grunt) {
 			].join("\n");
 		}
 
+		function successTestCaseXML(name, matches) {
+			return [
+				"\t<testcase name=\"" + name + "\">",
+				"\t</testcase>"
+			].join("\n");
+		}
+
 		return function(options, filePaths, results, numResults) {
 
 			var parts = Object.keys(results).reduce(function(parts, file) {
 				parts.numTests += 1;
-				parts.numFailures += results[file].length;
+				
+				var isFailure = true;
 
-				parts.testCases.push(testCaseXML(file, results[file]));
+				if (options.isJUnitFailure !== null) {
+					isFailure = options.isJUnitFailure(file, results[file]);
+				}
+
+				if (isFailure) {
+					parts.numFailures += results[file].length;
+					parts.testCases.push(failTestCaseXML(file, results[file], options.JUnitFailureMessage));
+				} else {
+					parts.testCases.push(successTestCaseXML(file, results[file], options.JUnitFailureMessage));
+				}
 
 				return parts;
 			}, {
@@ -306,10 +326,9 @@ module.exports = function(grunt) {
 			});
 
 			var content = [
-
 				"<?xml version=\"1.0\"?>",
-				"<testsuite name=\"jshint\" tests=\"" + parts.numTests + "\" failures=\"" + parts.numFailures + "\" errors=\"0\">",
-			  		parts.testCases.join("\n"),
+				"<testsuite name=\"" + options.JUnitTestsuiteName + "\" tests=\"" + parts.numTests + "\" failures=\"" + parts.numFailures + "\" errors=\"0\">",
+					parts.testCases.join("\n"),
 				"</testsuite>"
 
 			].join("\n");
@@ -332,11 +351,11 @@ module.exports = function(grunt) {
 		function pad(n) {
 			return n < 10 ? '0' + n : n;
 		}
-		return d.getUTCFullYear()+'-'
-			+ pad(d.getUTCMonth()+1)+'-'
-			+ pad(d.getUTCDate()) +' '
-			+ pad(d.getUTCHours())+':'
-			+ pad(d.getUTCMinutes())+':'
-			+ pad(d.getUTCSeconds())
+		return d.getUTCFullYear() + '-'+ 
+			pad(d.getUTCMonth()+1) + '-' + 
+			pad(d.getUTCDate()) + ' ' + 
+			pad(d.getUTCHours()) + ':' + 
+			pad(d.getUTCMinutes()) + ':' + 
+			pad(d.getUTCSeconds())
 	};
 };

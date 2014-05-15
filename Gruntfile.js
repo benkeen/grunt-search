@@ -17,6 +17,37 @@ module.exports = function(grunt) {
 			tests: ['test/tmp']
 		},
 
+		jshint: {
+			all: ['Gruntfile.js', 'tasks/search.js'],
+			options: {
+				force: true,
+				curly: false,
+				eqeqeq: false,
+				immed: false,
+				latedef: true,
+				newcap: false,
+				noarg: true,
+				sub: true,
+				undef: true,
+				boss: true,
+				eqnull: true,
+				node: true,
+				smarttabs: true,
+				multistr: true,
+				browser: true,
+				onecase: true,
+				asi: true,
+				strict: false,
+				trailing: false,
+				nonstandard: true,
+				noempty: false,
+				shadow: true,
+				globals: {
+					module: true
+				}
+			}
+		},
+
 		// configuration to be run (and then tested)
 		search: {
 			default: {
@@ -53,6 +84,7 @@ module.exports = function(grunt) {
 
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-nodeunit');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
 
 	// whenever the "test" task is run, first clean the "tmp" dir, then run this plugin's task(s), then test the result
 	grunt.registerTask('test', ['clean', 'search', 'nodeunit']);
