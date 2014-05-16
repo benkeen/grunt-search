@@ -81,7 +81,6 @@ module.exports = function(grunt) {
 							match: lineMatches[0]
 						};
 
-
 						if (!options.scopeMatchToFile && (options.logCondition === null || options.logCondition(lineMatch) === true)) {
 
 							if (!matches.hasOwnProperty(file)) {
