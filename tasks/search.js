@@ -16,7 +16,8 @@ module.exports = function(grunt) {
 		var options = this.options({
 			searchString: null,
 			logFile: null,
-			logFormat: 'json', // json/xml/text/console
+			logFormat: 'json', // json/xml/text/junit/custom/console
+			customLogFormatCallback: null,
 			failOnMatch: false,
 			scopeMatchToFile: false,
 			JUnitTestsuiteName: 'jshint',
@@ -24,6 +25,7 @@ module.exports = function(grunt) {
 			outputExaminedFiles: false,
 			onComplete: null,
 			onMatch: null,
+			logCondition: null,
 			isJUnitFailure: null
 		});
 
@@ -136,7 +138,7 @@ module.exports = function(grunt) {
 		if (options.searchString === null) {
 			optionErrors.push("Missing options.searchString value.");
 		}
-		if (options.logFormat !== "console" && options.logFile === null) {
+		if (options.logFormat !== "console" && options.logFormat !== "custom" && options.logFile === null) {
 			optionErrors.push("Missing options.logFile value.");
 		}
 		if (optionErrors.length) {
@@ -150,8 +152,6 @@ module.exports = function(grunt) {
 	var _generateLogFile = function(options, filePaths, results, numResults) {
 		var content = '';
 
-		console.log('options.logFormat', options.logFormat);
-
 		if (options.logFormat === "json") {
 			content = _getJSONLogFormat(options, filePaths, results, numResults);
 		} else if (options.logFormat === "xml") {
@@ -160,6 +160,18 @@ module.exports = function(grunt) {
 			content = _getJUnitLogFormat(options, filePaths, results, numResults);
 		} else if (options.logFormat === "text" || options.logFormat === "console") {
 			content = _getTextLogFormat(options, filePaths, results, numResults);
+		} else if (options.logFormat === "custom") {
+			if (_isFunction(options.customLogFormatCallback)) {
+				options.customLogFormatCallback({
+					filePaths: filePaths,
+					results: results,
+					numResults: numResults
+				});
+				return;
+			} else {
+				grunt.log.error("Error: custom logFormat option selected, but invalid/missing customLogFormatCallback option defined.");
+				return;
+			}
 		}
 
 		if (options.logFormat !== "console") {
@@ -275,7 +287,6 @@ module.exports = function(grunt) {
 	var _getJUnitLogFormat = (function() {
 
 		function failTestCaseXML(name, matches, message) {
-
 			return [
 				"\t<testcase name=\"" + name + "\">",
 				"\t\t<failure message=\"" + message + "\">",
@@ -339,6 +350,7 @@ module.exports = function(grunt) {
 		};
 	}());
 
+
 	// helpers ----------------
 
 	var _cleanStr = function(str) {
@@ -356,5 +368,9 @@ module.exports = function(grunt) {
 			pad(d.getUTCHours()) + ':' + 
 			pad(d.getUTCMinutes()) + ':' + 
 			pad(d.getUTCSeconds())
+	};
+
+	var _isFunction = function(obj) {
+		return !!(obj && obj.constructor && obj.call && obj.apply);
 	};
 };

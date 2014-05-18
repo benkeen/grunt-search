@@ -71,6 +71,19 @@ module.exports = function(grunt) {
 					logFile: "test/tmp/junit-nocommit.xml",
 					logFormat: "junit"
 				}
+			},
+
+			customLogSearch: {
+				files: {
+					src: ["test/test_source.html"]
+				},
+				options: {
+					logFormat: "custom",
+					searchString: ".net",
+					customLogFormatCallback: function(params) {
+						console.log(params);
+					}
+				}
 			}
 		},
 

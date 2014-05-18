@@ -85,6 +85,26 @@ grunt.initConfig({
 				searchString: /(<\?[^p])|(<\?$)/,
 				logFormat: "console"
 			}
+		},
+
+		// Example 4: custom logging function. This example shows how you can access the raw results to
+		// do whatever you want with it.
+		chicken_sounds: {
+			files: {
+				src: ["*"],
+			},
+			options: {
+				searchString: /cluck|cluckity|bwaaaaaah!|/,
+				logFormat: "custom",
+				customLogFormatCallback: function(params) {
+					// here, params is an object containing the following
+					{
+						filePaths: [], // an array of file paths
+						results: [], // the results
+						numResults: X // the number of results
+					}
+				}
+			}
 		}
     }
 });
@@ -101,8 +121,17 @@ http://gruntjs.com/configuring-tasks
 
 The `options` property can contain any of the following:
 
-- *searchString*: (required) a string or regexp. This is the string you're looking for.
-- *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml`, `junit`, `text` or `console`.
+#### required setting
+- *searchString*: a string or regexp. This is the string you're looking for.
+
+#### optional settings
+- *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml`, `junit`, `text`, `custom`,
+or `console`. The json, XML, text and console options are self explanatory; the junit option logs the information in
+an XML format understood by JUnit; and the custom option lets you pass off the logging to your own function, defined
+(or at least accessible) to your gruntfile. For that, you need to
+- *customLogFormatCallback* (optional, unless you choose `custom` for the logFormat setting). If you want, you can define
+your own logging function to access the raw info. Take a look at the chicken_sounds example above to see how to configure
+this, and the data structure you get passed to your callback function.
 - *logFile*: (required, unless logFormat is set to `console`) the location of the file to be created. Like all things with
 Grunt, this is relative to the Grunt root.
 - *failOnMatch*: (optional, defaults to `false`). This option lets you choose to fail the build process if any matches
