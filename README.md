@@ -97,12 +97,14 @@ grunt.initConfig({
 				searchString: /cluck|cluckity|bwaaaaaah!|/,
 				logFormat: "custom",
 				customLogFormatCallback: function(params) {
+					/*
 					// here, params is an object containing the following
 					{
 						filePaths: [], // an array of file paths
 						results: [], // the results
 						numResults: X // the number of results
 					}
+					*/
 				}
 			}
 		}
