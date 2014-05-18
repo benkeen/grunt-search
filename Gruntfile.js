@@ -2,11 +2,11 @@
  * grunt-search
  * https://github.com/benkeen/grunt-search
  *
- * Copyright (c) 2013 Ben Keen
+ * Copyright (c) 2014 Ben Keen
  * Licensed under the MIT license.
  */
 
-'use strict';
+"use strict";
 
 module.exports = function(grunt) {
 
