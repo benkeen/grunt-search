@@ -123,6 +123,10 @@ with the following structure: `{ file: "", line: X, match: "" }`
 - *logCondition*: (optional) a function. This can be called to check if this match should be included in output. It's
 passed a single parameter - an object with the following structure: `{ file: "", line: X, match: "" }`. If this function
 returns `true` the match would be included, if `false` it is not.
+- *JUnitTestsuiteName*: (optional) a function. If *logFormat* property set to `true` this function would be evaluated to determine if should this item be marked in JUnit report or not. It's passed two parameters, file dir object
+with the following structure: `{ line: X, match: "" }` ( or `{ line: [X,..], match: ["",..] }`, if scopeMatchToFile set to `true` ). If this function returns `true` JUnit will mark this match as failed, if `false` JUnit will mark this match as passed.
+- *JUnitTestsuiteName*: (optional) a string - name for test suite in JUnit report.
+- *JUnitFailureMessage*: (optional) a string - message for failed test suites in JUnit report.
 
 Note: if either of the required parameters are omitted, the build will fail.
 
