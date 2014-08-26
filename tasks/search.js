@@ -75,26 +75,29 @@ module.exports = function(grunt) {
 					if (lineMatches) {
 						foundMatch = true;
 						matchLines.push(j);
-						matchStrings.push(lineMatches[0]);
-
-						var lineMatch = {
-							file: file,
-							line: j,
-							match: lineMatches[0]
-						};
-
-						if (!options.scopeMatchToFile && (options.logCondition === null || options.logCondition(lineMatch) === true)) {
-
-							if (!matches.hasOwnProperty(file)) {
-								matches[file] = [];
-							}
-							matches[file].push({ line: j, match: lineMatches[0] });
-							numMatches++;
-							
-							if (options.onMatch !== null) {
-								options.onMatch(lineMatch);
-							}
+						for (var k=0; k<lineMatches.length; k++){
+							matchStrings.push(lineMatches[k]);
+	
+							var lineMatch = {
+								file: file,
+								line: j,
+								match: lineMatches[k]
+							};
+	
+							if (!options.scopeMatchToFile && (options.logCondition === null || options.logCondition(lineMatch) === true)) {
+	
+								if (!matches.hasOwnProperty(file)) {
+									matches[file] = [];
+								}
+								matches[file].push({ line: j, match: lineMatches[k] });
+								numMatches++;
+								
+								if (options.onMatch !== null) {
+									options.onMatch(lineMatch);
+								}
+							}	
 						}
+						
 					}
 				}
 
