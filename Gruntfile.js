@@ -2,7 +2,7 @@
  * grunt-search
  * https://github.com/benkeen/grunt-search
  *
- * Copyright (c) 2014 Ben Keen
+ * Copyright (c) 2015 Ben Keen
  * Licensed under the MIT license.
  */
 
@@ -78,8 +78,9 @@ module.exports = function(grunt) {
 					src: ["test/test_source.html"]
 				},
 				options: {
-					logFormat: "custom",
-					searchString: ".net",
+					logFormat: "text",
+          logFile: "output.txt",
+					searchString: [".net", "mon"],
 					customLogFormatCallback: function(params) {
 						console.log(params);
 					}

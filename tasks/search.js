@@ -35,9 +35,19 @@ module.exports = function(grunt) {
 		}
 
 		// if the searchString isn't a regular expression, convert it to one
-		if (!(options.searchString instanceof RegExp)) {
-			options.searchString = new RegExp(options.searchString, "g");
-		}
+    if (!Array.isArray(options.searchString)) {
+      options.searchString = [options.searchString];
+    }
+
+    // now convert all strings in the array to regexps
+    var cleanSearchStrings = [];
+    options.searchString.forEach(function (item) {
+      if (!(item instanceof RegExp)) {
+        cleanSearchStrings.push({ regexp: new RegExp(item, "g"), original: item });
+      } else {
+        cleanSearchStrings.push({ regexp: item, original: item });
+      }
+    });
 
 		// now iterate over all specified file groups
 		this.files.forEach(function(f) {
@@ -58,7 +68,7 @@ module.exports = function(grunt) {
 				}
 			});
 
-			// now search the files for the search string. This is pretty poor from a memory perspective: it loads
+			// now search the files for the search string(s). This is pretty poor from a memory perspective: it loads
 			// the entire file into memory and runs the reg exp on it
 			var matches = {};
 			var numMatches = 0;
@@ -70,35 +80,43 @@ module.exports = function(grunt) {
 				var matchLines = [];
 				var matchStrings = [];
 				var foundMatch = false;
+
+        // yikes.
 				for (var j=1; j<=lines.length; j++) {
-					var lineMatches = lines[j-1].match(options.searchString);
-					if (lineMatches) {
-						foundMatch = true;
-						matchLines.push(j);
-						for (var k=0; k<lineMatches.length; k++){
-							matchStrings.push(lineMatches[k]);
-	
-							var lineMatch = {
-								file: file,
-								line: j,
-								match: lineMatches[k]
-							};
-	
-							if (!options.scopeMatchToFile && (options.logCondition === null || options.logCondition(lineMatch) === true)) {
-	
-								if (!matches.hasOwnProperty(file)) {
-									matches[file] = [];
-								}
-								matches[file].push({ line: j, match: lineMatches[k] });
-								numMatches++;
-								
-								if (options.onMatch !== null) {
-									options.onMatch(lineMatch);
-								}
-							}	
-						}
-						
-					}
+          for (var k=0; k<cleanSearchStrings.length; k++) {
+            var currSearchString = cleanSearchStrings[k];
+            var lineMatches = lines[j-1].match(currSearchString.regexp);
+
+            if (!lineMatches) {
+              continue;
+            }
+
+            foundMatch = true;
+            matchLines.push(j);
+
+            for (var m=0; m<lineMatches.length; m++) {
+              matchStrings.push(lineMatches[m]);
+
+              var lineMatch = {
+                file: file,
+                line: j,
+                match: lineMatches[m],
+                searchString: currSearchString.original
+              };
+
+              if (!options.scopeMatchToFile && (options.logCondition === null || options.logCondition(lineMatch) === true)) {
+                if (!matches.hasOwnProperty(file)) {
+                  matches[file] = [];
+                }
+                matches[file].push({ line: j, match: lineMatches[m], searchString: currSearchString.original });
+                numMatches++;
+
+                if (options.onMatch !== null) {
+                  options.onMatch(lineMatch);
+                }
+              }
+            }
+          }
 				}
 
 				var fileMatch = {
@@ -108,7 +126,6 @@ module.exports = function(grunt) {
 				};
 
 				if (foundMatch && options.scopeMatchToFile && (options.logCondition === null || options.logCondition(fileMatch) === true)) {
-					
 					if (!matches.hasOwnProperty(file)) {
 						matches[file] = [];
 					}
@@ -244,7 +261,8 @@ module.exports = function(grunt) {
 				matchGroup += "\n\t\t<result>\n" + 
 					"\t\t\t<file>" + file + "</file>\n" + 
 					"\t\t\t<line>" + results[file][i].line + "</line>\n" + 
-					"\t\t\t<match>" + results[file][i].match + "</match>\n" + 
+					"\t\t\t<match>" + results[file][i].match + "</match>\n" +
+          "\t\t\t<searchStr>" + results[file][i].searchString + "</searchStr>\n" +
 					"\t\t</result>";
 			}
 		}
@@ -273,7 +291,8 @@ module.exports = function(grunt) {
 			for (var i=0; i<results[file].length; i++) {
 				content += "\tFile: " + file + "\n" + 
 				"\tLine: " + results[file][i].line + "\n" + 
-				"\tMatch: " + results[file][i].match + "\n\n"
+				"\tMatch: " + results[file][i].match + "\n" +
+        "\tSearch: " + results[file][i].searchString + "\n\n";
 			}
 		}
 

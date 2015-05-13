@@ -124,7 +124,7 @@ http://gruntjs.com/configuring-tasks
 The `options` property can contain any of the following:
 
 #### required setting
-- *searchString*: a string or regexp. This is the string you're looking for.
+- *searchString*: a string or regexp, or array of strings/regexps. This is the string or strings you're looking for.
 
 #### optional settings
 - *logFormat*: (optional, defaults to `json`) the format of the log file: `json`, `xml`, `junit`, `text`, `custom`,
@@ -163,6 +163,7 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
+- *0.1.7* - May 12th, 2015 - searchString now allows arrays; generated output of XML, JSON and text now include search query details.
 - *0.1.6* - May 17th, 2014 - custom log option added. jshint added and additional JUnit options added by [Sergei Z.](https://github.com/sagens42)
 - *0.1.5* - May 13th, 2014 - logCondition and scopeMatchToFile, courtesy of [Sergei Z.](https://github.com/sagens42)
 - *0.1.4* - Mar 5th, 2014. `junit` logFile option value added for generating JUnit XML reports. Courtesy of Sergii Iavorsky.
