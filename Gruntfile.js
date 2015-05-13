@@ -78,10 +78,12 @@ module.exports = function(grunt) {
 					src: ["test/test_source.html"]
 				},
 				options: {
-					logFormat: "text",
-          logFile: "output.txt",
+					logFormat: "custom",
 					searchString: [".net", "mon"],
 					customLogFormatCallback: function(params) {
+
+            // here you'd do whatever you want with the data. The console.log() just outputs [Object] for the really
+            // interesting parts - but you can access it here
 						console.log(params);
 					}
 				}
