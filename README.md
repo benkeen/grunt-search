@@ -163,6 +163,7 @@ Note: if either of the required parameters are omitted, the build will fail.
 
 ### Changelog
 
+- *0.1.8* - Feb 21, 2016 - Grunt 1.0 compatibility update.
 - *0.1.7* - May 12th, 2015 - searchString now allows arrays; generated output of XML, JSON and text now include search query details.
 - *0.1.6* - May 17th, 2014 - custom log option added. jshint added and additional JUnit options added by [Sergei Z.](https://github.com/sagens42)
 - *0.1.5* - May 13th, 2014 - logCondition and scopeMatchToFile, courtesy of [Sergei Z.](https://github.com/sagens42)
